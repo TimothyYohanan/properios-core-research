@@ -1,0 +1,15 @@
+#!/bin/sh
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+CA_X509_CERT_FILE_DIRECTORY="$SCRIPT_DIR/../config/includes.chroot_after_packages/etc/pam_pkcs11/cacerts"
+rm -rf "$CA_X509_CERT_FILE_DIRECTORY"
+mkdir "$CA_X509_CERT_FILE_DIRECTORY"
+
+unset CA_X509_CERT_FILE_DIRECTORY
+
+sed -i \
+  '/^SMART_CARD_X509_CERT_SUBJECT_LINE=/c\SMART_CARD_X509_CERT_SUBJECT_LINE="Note: this string will be automatically replaced when the '\''$ lb build'\'' command is run. See /auto/build."' \
+  "$SCRIPT_DIR/../config/hooks/normal/0800-smart-card-authentication-setup.hook.chroot"

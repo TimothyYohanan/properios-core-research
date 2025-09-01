@@ -1,0 +1,186 @@
+#!/bin/sh
+
+set -e
+set -u
+
+echo "Executing '0750-file-and-directory-ownership-and-permissions-setup.hook.chroot'"
+
+# '/' subdirectories' ownership and permissions
+chown    root:root  /boot
+chmod    700        /boot
+chown    root:root  /dev
+chmod    755        /dev
+chown    root:root  /etc
+chmod    755        /etc
+chown    root:root  /home
+chmod    755        /home
+chown    root:root  /media
+chmod    755        /media
+chown    root:root  /opt
+chmod    755        /opt
+chown    root:root  /mnt
+chmod    755        /mnt
+chown    root:root  /proc
+chmod    555        /proc
+chown -R root:root  /root
+chmod -R 700        /root
+chown    root:root  /run
+chmod    755        /run
+chown    root:root  /srv # note: does not work. left here for reference. this is instead accomplished using a boot-time hook located at /usr/lib/live/config/10000-file-and-directory-ownership-and-permissions
+chmod    700        /srv # note: does not work. left here for reference. this is instead accomplished using a boot-time hook located at /usr/lib/live/config/10000-file-and-directory-ownership-and-permissions
+chown    root:root  /sys
+chmod    555        /sys
+chown    root:root  /tmp
+chmod    1777       /tmp
+chown    root:root  /usr
+chmod    755        /usr
+chown    root:root  /var
+chmod    755        /var
+
+# '/usr' subdirectories' ownership and permissions
+chown    root:root  /usr/bin
+chmod    755        /usr/bin 
+chown    root:root  /usr/include
+chmod    755        /usr/include 
+chown    root:root  /usr/lib
+chmod    755        /usr/lib 
+chown    root:root  /usr/lib64
+chmod    755        /usr/lib64 
+chown    root:root  /usr/local
+chmod    755        /usr/local 
+chown -R root:root  /usr/sbin
+chmod -R 700        /usr/sbin
+
+# '/usr/local' subdirectories' ownership and permissions
+chown    root:root  /usr/local/bin
+chmod    755        /usr/local/bin 
+chown    root:root  /usr/local/include
+chmod    755        /usr/local/include 
+chown    root:root  /usr/local/lib
+chmod    755        /usr/local/lib 
+chown -R root:root  /usr/local/sbin
+chmod -R 700        /usr/local/sbin
+
+# Additional setup...
+chown root:root     /usr/lib/live/config/10000-file-and-directory-ownership-and-permissions
+chmod 755           /usr/lib/live/config/10000-file-and-directory-ownership-and-permissions
+chown -R root:root  /etc/pam.d
+chmod -R 700        /etc/pam.d
+chown -R root:root  /etc/security
+chmod -R 700        /etc/security
+chown -R root:root  /etc/pam_pkcs11
+chmod -R 700        /etc/pam_pkcs11
+chown root:root     /etc/shells
+chmod 600           /etc/shells
+chown root:root     /etc/nftables.conf
+chmod 600           /etc/nftables.conf
+chown root:root     /etc/sysctl.conf
+chmod 600           /etc/sysctl.conf
+chown root:root     /etc/login.defs
+chmod 600           /etc/login.defs
+chown root:root     /etc/nsswitch.conf
+chmod 600           /etc/nsswitch.conf
+chown root:root     /etc/adduser.conf
+chmod 600           /etc/adduser.conf
+chown root:root     /etc/deluser.conf
+chmod 600           /etc/deluser.conf
+chown root:root     /etc/passwd
+chmod 600           /etc/passwd
+chown root:root     /etc/shadow
+chmod 600           /etc/shadow
+chown root:root     /etc/group
+chmod 600           /etc/group
+chown root:root     /etc/gshadow
+chmod 600           /etc/gshadow
+chown root:root     /etc/X11
+chmod 700           /etc/X11
+chown root:root     /etc/apparmor.d
+chmod 700           /etc/apparmor.d
+chown root:root     /etc/cron.d
+chmod 700           /etc/cron.d
+chown root:root     /etc/cron.daily
+chmod 700           /etc/cron.daily
+chown root:root     /etc/cron.hourly
+chmod 700           /etc/cron.hourly
+chown root:root     /etc/cron.monthly
+chmod 700           /etc/cron.monthly
+chown root:root     /etc/cron.weekly
+chmod 700           /etc/cron.weekly
+chown root:root     /etc/cron.yearly
+chmod 700           /etc/cron.yearly
+chown root:root     /etc/dhcp
+chmod 700           /etc/dhcp
+chown root:root     /etc/init.d
+chmod 700           /etc/init.d
+chown root:root     /etc/initramfs-tools
+chmod 700           /etc/initramfs-tools
+chown root:root     /etc/iproute2
+chmod 700           /etc/iproute2
+chown root:root     /etc/kernel
+chmod 700           /etc/kernel
+chown root:root     /etc/modprobe.d
+chmod 700           /etc/modprobe.d
+chown root:root     /etc/modules-load.d
+chmod 700           /etc/modules-load.d
+chown root:root     /etc/network
+chmod 700           /etc/network
+chown root:root     /etc/opensc
+chmod 700           /etc/opensc
+chown root:root     /etc/rc0.d
+chmod 700           /etc/rc0.d
+chown root:root     /etc/rc1.d
+chmod 700           /etc/rc1.d
+chown root:root     /etc/rc2.d
+chmod 700           /etc/rc2.d
+chown root:root     /etc/rc3.d
+chmod 700           /etc/rc3.d
+chown root:root     /etc/rc4.d
+chmod 700           /etc/rc4.d
+chown root:root     /etc/rc5.d
+chmod 700           /etc/rc5.d
+chown root:root     /etc/rc6.d
+chmod 700           /etc/rc6.d
+chown root:root     /etc/rcS.d
+chmod 700           /etc/rcS.d
+chown root:root     /etc/selinux
+chmod 700           /etc/selinux
+chown root:root     /etc/skel
+chmod 700           /etc/skel
+chown root:root     /etc/ssl
+chmod 700           /etc/ssl
+chown root:root     /etc/sysctl.d
+chmod 700           /etc/sysctl.d
+chown root:root     /etc/systemd
+chmod 700           /etc/systemd
+chown root:root     /etc/crontab
+chmod 600           /etc/crontab
+chown root:root     /etc/xattr.conf
+chmod 600           /etc/xattr.conf
+chown root:root     /etc/ssl/private
+chmod 700           /etc/ssl/private
+chown root:root     /etc/ssl/certs
+chmod 755           /etc/ssl/certs
+chown root:root     /etc/ssl/openssl.cnf
+chmod 644           /etc/ssl/openssl.cnf
+chown root:root     /etc/pam.conf
+chmod 600           /etc/pam.conf
+
+# Patch since for some reason /usr/sbin/vigr is a system-link to /usr/sbin/vipw except with 777 permissions...
+VIGR=$(realpath -q "$(command -v vigr 2>/dev/null || echo "")" 2>/dev/null || echo "")
+if [ -n "$VIGR" ]; then 
+    rm -rf "$VIGR"
+fi 
+unset VIGR
+
+USERMOD_COMMANDS="adduser chage chfn chpass chpasswd chsh gpasswd groupadd groupdel groupmod grpck ldappasswd mkpasswd newusers passwd pw pwck pwgen rmuser smbpasswd useradd userdel usermod vigr vipw"
+
+for cmd in $USERMOD_COMMANDS; do 
+    CMD_PATH=$(realpath -q "$(command -v "$cmd" 2>/dev/null || echo "")" 2>/dev/null || echo "")
+    if [ -n "$CMD_PATH" ]; then 
+#        echo "DEBUG: Setting ownership and permissions on $CMD_PATH"
+        chown root:root "$CMD_PATH"
+        chmod 700 "$CMD_PATH"
+    fi 
+done
+
+unset USERMOD_COMMANDS

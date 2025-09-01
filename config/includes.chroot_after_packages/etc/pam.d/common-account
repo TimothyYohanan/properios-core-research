@@ -1,0 +1,11 @@
+#%PAM-1.0
+
+# Requires user to be listed in /etc/passwd
+# Retained for reference. Unnecessary due to usage of pam_access.so
+# account   [success=ok default=die]   pam_localuser.so
+
+# Enforces rules listed at /etc/security/access.conf
+account   [success=ok default=die]   pam_access.so
+
+# Requires user's account to not be expired, password to not be expired, etc..
+account	  [success=ok new_authtok_reqd=done default=die]   pam_unix.so 

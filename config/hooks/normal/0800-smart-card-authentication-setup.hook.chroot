@@ -1,0 +1,16 @@
+#!/bin/sh
+
+set -e
+set -u
+
+echo "Executing '0800-smart-card-authentication-setup.hook.chroot'"
+
+SMART_CARD_X509_CERT_SUBJECT_LINE="Note: this string will be automatically replaced when the '$ lb build' command is run. See /auto/build."
+
+pkcs11_make_hash_link /etc/pam_pkcs11/cacerts/
+
+sh -c "cat <<EOF > /etc/pam_pkcs11/subject_mapping
+# Mapping file for Certificate Subject
+# format: Certificate Subject -> login
+$SMART_CARD_X509_CERT_SUBJECT_LINE -> root
+EOF"

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+set -e
+set -u
+
+echo "Executing '0950-auto-remove-packages.hook.chroot'"
+
+apt -y autoremove --purge

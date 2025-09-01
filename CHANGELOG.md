@@ -25,3 +25,23 @@
 1. https://live-team.pages.debian.net/live-manual/html/live-manual/index.en.html
 2. https://manpages.debian.org/bookworm/live-build/lb_config.1.en.html
 3. https://manpages.debian.org/bookworm/live-build/lb_clean.1.en.html
+
+## v0.0.2
+### Features:
+1. The root user account is secured using a PIV Smart Card.
+2. Creating new accounts requires authentication from the root user.
+3. Changing the password on any account requires authentication from the root user.
+4. Implements Properios Core Specification v1.0.0
+    - The properios-core-specification git repository is included as a submodule in this project
+        - Location on built system: /root/properios-core-specification 
+        - Location within project directory: config/includes.chroot_after_packages/root/properios-core-specification
+    - properios-core-specification contains a design specification file. That file *is* the authoritative design specification for properios-core.
+    - properios-core-specification contains an example test script. When executed, that test script will determine whether the host system meets the design specification or not. 
+        - For convenience, the root user can execute this script from any directory simply by executing the command '\$ test-system-against-design-spec'.
+
+### Comments:
+1. The PKCS-11 PAM module (a.k.a. the 'libpam-pkcs11' apt package) is well documented. 
+    - See Reference 1.
+
+### References:
+1. https://opensc.github.io/pam_pkcs11/doc/pam_pkcs11.html  

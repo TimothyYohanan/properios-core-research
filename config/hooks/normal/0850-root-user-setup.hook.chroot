@@ -1,0 +1,18 @@
+#!/bin/sh
+
+set -e
+set -u
+
+echo "Executing '0850-root-user-setup.hook.chroot'"
+
+chown -R root:root  /root/audit-this-directory
+chmod -R 100        /root/audit-this-directory
+
+ln -s -f /root/audit-this-directory /usr/local/sbin/audit-this-directory
+
+if [ ! -d /root/properios-core-specification ]; then
+  echo "ERROR: The properios-core-specification submodule is missing. You probably forgot to run 'git clone' with the '--recursive' flag when you cloned this repository."
+  exit 1
+fi
+
+ln -s -f /root/properios-core-specification/example-test-script /usr/local/sbin/test-system-against-design-spec

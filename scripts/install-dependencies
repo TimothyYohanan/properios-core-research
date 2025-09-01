@@ -22,5 +22,5 @@ ntpdate time.nist.gov
 
 apt update
 
-apt install -y live-build
+apt install -y live-build gnupg
 

@@ -1,0 +1,5 @@
+#%PAM-1.0
+
+@include root-auth
+auth    sufficient  pam_unix.so
+auth    requisite   pam_deny.so

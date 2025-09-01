@@ -1,0 +1,114 @@
+#!/bin/sh
+
+set -e
+set -u
+
+# Note: This script does not yet handle the sticky bit properly. I'll set that up if/when I need it.
+# Note: This script only looks for files with permissions that are greater than what is specified. I'll set up less-than comparisons if/when I need it.
+
+show_help() {
+    cat << EOF
+Directory Auditor
+Options: 
+  -h, --help              Show this help message and exit
+  -f, --max-file-perm N   (e.g., 755)
+  -d, --max-dir-perm N    (e.g., 644)
+
+Example Usage:
+  $ cd /etc
+  $ audit-this-directory -f 700 -d 700 
+   > result 1
+   > result 2
+   > ...
+EOF
+}
+
+check_input() {
+    input="$1"
+    len=$(printf "%s" "$input" | wc -c)
+
+    case "$len" in
+        3)
+            echo "$input" | grep -Eq '^[0-7]{3}$' || {
+                echo "Error: 3-digit permissions must only contain digits 0–7."
+                exit 1
+            }
+            ;;
+        4)
+            echo "$input" | grep -Eq '^1[0-7]{3}$' || {
+                echo "Error: 4-digit permissions must start with 1 and be followed by digits 0–7."
+                exit 1
+            }
+            ;;
+        *)
+            echo "ERROR: File permissions must be expressed as a 3 or 4 digit number."
+            exit 1
+            ;;
+    esac
+}
+
+compare_perms() {
+    i=1
+    while [ $i -le 4 ]; do
+        DIGIT_VALUE=$(echo "$1" | cut -c "$i")
+        MAX=$(echo "$2" | cut -c "$i")
+        if [ "$DIGIT_VALUE" -gt "$MAX" ]; then
+            return 0
+        fi
+        i=$((i + 1))
+    done
+    return 1
+}
+
+for arg in "$@"; do
+    if [ "$arg" = "-h" ] || [ "$arg" = "--help" ]; then
+        show_help
+        exit 0
+    fi
+done
+
+MAX_FILE_PERMS=""
+MAX_DIR_PERMS=""
+
+while [ "$#" -gt 0 ]; do
+    case "$1" in
+        -f|--max-file-perm)
+            if [ $# -lt 2 ]; then
+                echo "Missing value for $1"
+                exit 1
+            fi
+            check_input "$2"
+            MAX_FILE_PERMS=$(printf "%04d" "$2")  # Ensure 4-digit with leading 0 if needed
+            shift 2
+            ;;
+        -d|--max-dir-perm)
+            if [ $# -lt 2 ]; then
+                echo "Missing value for $1"
+                exit 1
+            fi
+            check_input "$2"
+            MAX_DIR_PERMS=$(printf "%04d" "$2")  # Ensure 4-digit with leading 0 if needed
+            shift 2
+            ;;
+        *)
+            echo "Unknown option: $1"
+            echo "Use --help to see valid options."
+            exit 1
+            ;;
+    esac
+done
+
+for path in "$(pwd)"/*; do
+    [ -e "$path" ] || continue
+
+    ACTUAL_PERMISSIONS=$(printf "%04d" "$(stat -c "%a" "$path" 2>/dev/null)")  # Ensure 4-digit with leading 0 if needed
+
+    if [ -n "$MAX_FILE_PERMS" ] && [ -f "$path" ]; then
+        compare_perms "$ACTUAL_PERMISSIONS" "$MAX_FILE_PERMS" && echo "file      $(ls -ld "$path")"
+    elif [ -n "$MAX_DIR_PERMS" ] && [ -d "$path" ]; then
+        compare_perms "$ACTUAL_PERMISSIONS" "$MAX_DIR_PERMS" && echo "directory $(ls -ld "$path")"
+    fi
+done
+
+unset MAX_FILE_PERMS
+unset MAX_DIR_PERMS

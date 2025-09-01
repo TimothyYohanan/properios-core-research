@@ -1,0 +1,8 @@
+#!/bin/sh
+
+set -e
+set -u
+
+echo "Executing '0975-enable-disable-services.hook.chroot'"
+
+systemctl enable pcscd

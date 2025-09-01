@@ -3,12 +3,13 @@
 # Exceptions:
 !/auto/
 !/config/
-!/local/
-!/scripts/
 !/notes/
+!/scripts/
 !.gitignore
+!.gitmodules
 !CHANGELOG.md
 !README.md
+!settings
 
 # Ignore Specific Files:
 /config/binary

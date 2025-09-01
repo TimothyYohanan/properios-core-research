@@ -1,0 +1,39 @@
+#!/bin/sh
+
+set -e
+set -u
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+. "$SCRIPT_DIR/../settings"
+
+CA_X509_CERT_FILE_DIRECTORY="$SCRIPT_DIR/../config/includes.chroot_after_packages/etc/pam_pkcs11/cacerts"
+rm -rf "$CA_X509_CERT_FILE_DIRECTORY"
+mkdir "$CA_X509_CERT_FILE_DIRECTORY"
+
+CA_X509_CERT_FILE_RANDOMIZED_NAME="$(gpg --armor --gen-random 2 32 | tr -dc 'A-Za-z0-9_-').crt"
+CA_X509_CERT_FILE_DESTINATION="$CA_X509_CERT_FILE_DIRECTORY/$CA_X509_CERT_FILE_RANDOMIZED_NAME"
+
+if [ -f "$CA_X509_CERT_FILE_PATH" ]; then
+  cp "$CA_X509_CERT_FILE_PATH" "$CA_X509_CERT_FILE_DESTINATION"
+  chmod 444 "$CA_X509_CERT_FILE_DESTINATION"
+else
+  echo "ERROR: Set 'CA_X509_CERT_FILE_PATH' to a valid file path in the settings file located at $SCRIPT_DIR/settings"
+  exit 1
+fi
+
+unset CA_X509_CERT_FILE_DIRECTORY
+
+sed -i \
+  "/^SMART_CARD_X509_CERT_SUBJECT_LINE=/c\SMART_CARD_X509_CERT_SUBJECT_LINE=\"$SMART_CARD_X509_CERT_SUBJECT_LINE\"" \
+  "$SCRIPT_DIR/../config/hooks/normal/0800-smart-card-authentication-setup.hook.chroot"
+
+lb build noauto \
+  "${@}"
+
+rm -rf "$CA_X509_CERT_FILE_DESTINATION"
+
+unset CA_X509_CERT_FILE_RANDOMIZED_NAME
+unset CA_X509_CERT_FILE_DESTINATION
+
+$SCRIPT_DIR/../scripts/pre-commit-fixup

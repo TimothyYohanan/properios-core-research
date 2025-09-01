@@ -1,0 +1,3 @@
+[submodule "config/includes.chroot_after_packages/root/properios-core-specification"]
+	path = config/includes.chroot_after_packages/root/properios-core-specification
+	url = https://github.com/TimothyYohanan/properios-core-specification.git
