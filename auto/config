@@ -1,0 +1,43 @@
+#!/bin/sh
+
+set -e
+set -u
+
+lb config noauto \
+	--image-name properios \
+	--architectures amd64 \
+	--distribution bookworm \
+	--parent-distribution bookworm \
+	--archive-areas "main contrib" \
+	--parent-archive-areas "main contrib" \
+	--linux-flavours amd64 \
+	--linux-packages "linux-image linux-headers" \
+	--binary-images iso-hybrid \
+	--bootloaders "syslinux grub-efi" \
+	--chroot-filesystem squashfs \
+	--bootappend-install "" \
+	--bootappend-live "boot=live components noautologin loglevel=7 systemd.unit=multi-user.target" \
+	--bootappend-live-failsafe "boot=live components noautologin loglevel=7 memtest noapic noapm nodma nomce nolapic nosmp nosplash vga=788 systemd.unit=multi-user.target" \
+	--firmware-chroot false \
+	--debian-installer none \
+	--uefi-secure-boot disable \
+	--apt-secure true \
+	--apt-recommends false \
+	--cache true \
+	--cache-indices false \
+	--cache-packages true \
+	--mirror-binary "http://deb.debian.org/debian/" \
+	--mirror-binary-security "http://security.debian.org/" \
+	--mirror-bootstrap "http://deb.debian.org/debian/" \
+	--mirror-chroot "http://deb.debian.org/debian/" \
+	--mirror-chroot-security "http://security.debian.org/" \
+	--security true \
+	--mirror-debian-installer "http://deb.debian.org/debian/" \
+	--parent-mirror-binary "http://deb.debian.org/debian/" \
+	--parent-mirror-binary-security "http://security.debian.org/" \
+	--parent-mirror-bootstrap "http://deb.debian.org/debian/" \
+	--parent-mirror-chroot "http://deb.debian.org/debian/" \
+	--parent-mirror-chroot-security "http://security.debian.org/" \
+	--parent-mirror-debian-installer "http://deb.debian.org/debian/" \
+	--apt-options "-y -o Acquire::Retries=2 -o Acquire::http::Timeout=10 -o Acquire::https::Timeout=10 -o Acquire::Connect-Timeout=10" \
+    "${@}"

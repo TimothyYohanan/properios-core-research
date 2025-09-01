@@ -1,0 +1,26 @@
+#!/bin/sh
+
+set -e
+
+if [ ! "$USER" = "root" ]; then
+  echo "ERROR: This script must be run as root."
+  exit 1
+fi
+
+if [ -f /etc/os-release ] && grep -iq "debian" /etc/os-release; then
+  : # pass
+elif [ -f /etc/issue ] && grep -iq "debian" /etc/issue; then
+  : # pass
+else
+  echo "ERROR: This script must be run on a Debian system."
+  exit 1
+fi
+
+apt install -y ntpdate
+
+ntpdate time.nist.gov
+
+apt update
+
+apt install -y live-build
+
