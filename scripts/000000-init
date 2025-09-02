@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -e
+set -u
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+mkdir -p "$SCRIPT_DIR/../tmp"
+mkdir -p "$SCRIPT_DIR/../config/packages.chroot"
+
+sudo apt install -y ntpdate
+sudo ntpdate time.nist.gov

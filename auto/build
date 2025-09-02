@@ -7,6 +7,23 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 . "$SCRIPT_DIR/../settings"
 
+sed -i \
+  "/^CUSTOM_KERNEL_VERSION=/c\CUSTOM_KERNEL_VERSION=\"$VER_NUM-$DIST_NAME\"" \
+  ${SCRIPT_DIR}/../config/hooks/normal/0001-create-initramfs-for-custom-kernel.hook.chroot
+
+sed -i \
+  "/^CUSTOM_KERNEL_VERSION=/c\CUSTOM_KERNEL_VERSION=\"$VER_NUM-$DIST_NAME\"" \
+  ${SCRIPT_DIR}/../config/hooks/normal/0002-remove-other-kernels.hook.chroot
+
+$SCRIPT_DIR/../scripts/000000-init
+$SCRIPT_DIR/../scripts/000001-download-kernel-keys
+$SCRIPT_DIR/../scripts/000002-download-kernel
+$SCRIPT_DIR/../scripts/000003-extract-and-verify-kernel-download
+$SCRIPT_DIR/../scripts/000004-install-kernel-build-dependencies
+$SCRIPT_DIR/../scripts/000005-configure-kernel
+$SCRIPT_DIR/../scripts/000006-build-kernel
+$SCRIPT_DIR/../scripts/000007-copy-kernel-packages
+
 CA_X509_CERT_FILE_DIRECTORY="$SCRIPT_DIR/../config/includes.chroot_after_packages/etc/pam_pkcs11/cacerts"
 rm -rf "$CA_X509_CERT_FILE_DIRECTORY"
 mkdir "$CA_X509_CERT_FILE_DIRECTORY"

@@ -1,6 +1,6 @@
 ### Usage
     This repository has submodules. When you clone it, you need to use the '--recursive' flag so that they are also cloned:
-    $ git clone --recursive <repo-url>
+    $ git clone --recursive https://github.com/TimothyYohanan/properios-core-research.git
 
     Once you have the repository and its submodules, update the settings file if needed, then:
     $ su - root

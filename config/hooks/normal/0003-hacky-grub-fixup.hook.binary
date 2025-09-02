@@ -1,0 +1,15 @@
+#!/bin/sh
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+PROJ_ROOT_DIR="$SCRIPT_DIR/../../.."
+
+# The default value which I am replacing is more explicit than its replacement. 
+# For this project, I know I'm never going to be installing new kernels to test 
+# while the system is running, and there's only one on the system. Otherwise, 
+# I would put some more thought into this file and also into how to name the 
+# custom kernel packages (i.e. put the ARCH at the end of the name as expected).
+sed -i 's/vmlinuz-\*amd64/vmlinuz/g' ${PROJ_ROOT_DIR}/binary/boot/grub/grub.cfg
+sed -i 's/initrd.img-\*amd64/initrd.img/g' ${PROJ_ROOT_DIR}/binary/boot/grub/grub.cfg

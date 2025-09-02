@@ -1,0 +1,14 @@
+#!/bin/sh
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+. "$SCRIPT_DIR/../settings"
+
+cd "$SCRIPT_DIR/../tmp/$VER"
+
+## Option: use a gui configurator
+# make menuconfig 
+
+## Option: Use a custom .config file
+## Note: On running Debian Live systems, the config file for the system can be found at '$ /boot/config-$(uname -r)'
+sudo cp "$SCRIPT_DIR/../.config" "$SCRIPT_DIR/../tmp/$VER/.config"

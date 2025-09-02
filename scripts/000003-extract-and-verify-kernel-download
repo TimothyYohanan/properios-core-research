@@ -1,0 +1,38 @@
+#!/bin/sh
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+. "$SCRIPT_DIR/../settings"
+
+echo "Verifying the checksums file"
+
+COUNT=$(gpg --verify --keyring="$SCRIPT_DIR/../tmp/sha_keyring.gpg" --status-fd=1 "$SCRIPT_DIR/../tmp/sha256sums.asc" 2>/dev/null | grep -c -E '^\[GNUPG:\] (GOODSIG|VALIDSIG)')
+if [ "$COUNT" -lt 2 ]; then
+  echo "ERROR: Failed to verify the sha256sums.asc file. Rerunning failed command with output enabled:"
+  echo "gpg --verify --keyring=$SHA_KEYRING --status-fd=1 ${SCRIPT_DIR}/../tmp/sha256sums.asc"
+  gpg --verify --keyring="$SCRIPT_DIR/../tmp/sha_keyring.gpg" --status-fd=1 "$SCRIPT_DIR/../tmp/sha256sums.asc"
+  exit 1
+fi
+
+SHA_CHECK="$SCRIPT_DIR/../tmp/sha256sums.txt"
+
+grep "$VER".tar.xz "$SCRIPT_DIR/../tmp/sha256sums.asc" > "$SHA_CHECK"
+
+echo "Verifying the downloaded tarball checksum"
+
+cd "$SCRIPT_DIR/../tmp"
+
+if ! sha256sum -c "$SHA_CHECK"; then
+  echo "ERROR: Failed to verify the downloaded tarball checksum."
+  exit 1
+fi
+
+echo "Verifying developer signature on the tarball"
+
+COUNT=$(xz -cd "$SCRIPT_DIR/../tmp/$VER.tar.xz" | gpg --verify --keyring="$SCRIPT_DIR/../tmp/dev_keyring.gpg" --status-fd=1 "$SCRIPT_DIR/../tmp/sha256sums.asc" 2>/dev/null | grep -c -E '^\[GNUPG:\] (GOODSIG|VALIDSIG)')
+if [ "$COUNT" -lt 2 ]; then
+  echo "ERROR: Failed to verify the tarball."
+  exit 1
+fi
+
+tar xf "$SCRIPT_DIR/../tmp/$VER.tar.xz"

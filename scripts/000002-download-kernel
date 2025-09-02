@@ -1,0 +1,13 @@
+#!/bin/sh
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+. "$SCRIPT_DIR/../settings"
+
+wget -P "$SCRIPT_DIR/../tmp/" https://cdn.kernel.org/pub/linux/kernel/"$MAJ"/sha256sums.asc
+
+wget -P "$SCRIPT_DIR/../tmp/" https://cdn.kernel.org/pub/linux/kernel/"$MAJ"/"$VER".tar.sign
+
+wget -P "$SCRIPT_DIR/../tmp/" https://cdn.kernel.org/pub/linux/kernel/"$MAJ"/"$VER".tar.xz 

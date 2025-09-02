@@ -44,4 +44,21 @@
     - See Reference 1.
 
 ### References:
-1. https://opensc.github.io/pam_pkcs11/doc/pam_pkcs11.html  
+1. https://opensc.github.io/pam_pkcs11/doc/pam_pkcs11.html 
+
+## v0.0.3
+### *Implements Properios Core Specification v2.0.0*
+### Features:
+1. The Debian kernel packages used in the project are now built from source with *minimal* modifications compared to the standard Debian Bookworm kernel.
+    - Enabled 'CONFIG_IKCONFIG' to embed the .config file used to build the kernel within the bootable kernel image [a.k.a. /boot/vmlinuz-$(uname -r)]. This allows testing whether specific kernel settings mentioned in the Properios Specification(s) have been implemented according to the specification(s).
+    - See Comment 4 and 5.
+
+### Comments:
+1. Shell scripts that are used by the '$ lb' command are located at /usr/lib/live/build on Debian systems which have the package installed.
+2. When you examine the packages on the built system, you'll realize that the cleanup that I did in the '0002-remove-other-kernels.hook.chroot' hook was not complete. For research purposes, that is okay (I really could have left in the unused kernel package as well).
+    $ dpkg -l | grep linux
+3. The output of the '$ uname -r' command is now going to report the "prisine" Linux kernel version rather than the Debian kernel version since the kernel is being built from source. As of the time of writing, the "pristine" kernel version being used here is only a few days out of date compared to the one that is used in the Debian kernel, however, you wouldn't immediately realize this if you ran the aforementioned command on this version of properios-core-research and the previous version (or even the latest version of Debian Bookworm at the time of writing) and compared the outputs.
+4. I've observed that the .config file provided on a Debian Live system built with the '$ lb' command builds the debug symbols package even if the host system (the Debian Live system which the .config file is gleaned from from) doesn't have the debug symbols package installed. I hope that there are no other differences between the provided .config and the kernel package, and indeed, it would make sense for only this difference to exist, but I am not certain of this. For my purposes this does not matter, but I considered it worth notating.
+5. In the .config used in this project, building the debug symbols package (the 'linux-image' .deb package with the '-dbg' flag in its name) has been disabled to improve build speed, and also to decrease the final image size. To re-enable it, change the following settings using the GUI configurator during step 000005-configure-kernel:
+   - Kernel hacking ---> Compile-time checks and compiler options ---> [*] Miscellaneous debug code
+   - Kernel hacking ---> Compile-time checks and compiler options ---> Debug information (Rely on the toolchain's implicit default DWARF version) ---> (X) Rely on the toolchain's implicit default DWARF version

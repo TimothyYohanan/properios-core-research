@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -e
+
+sudo apt -y install bc bison gcc flex libelf-dev libssl-dev
+
+sudo apt -y install fakeroot
+
+# Note: These are dependencies that were added due to errors during the build-kernel process.
+# Note (cont.): It is likely that these are Debian-specific build dependencies.
+sudo apt -y install rsync build-essential pahole

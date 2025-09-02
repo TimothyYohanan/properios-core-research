@@ -1,2 +1,10 @@
 libpam-pkcs11
 live-build
+
+# Compression
+gzip
+xz-utils
+bzip2
+lzop
+lz4
+zstd

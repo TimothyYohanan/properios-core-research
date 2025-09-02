@@ -1,0 +1,17 @@
+#!/bin/sh
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+. "$SCRIPT_DIR/../settings"
+
+cd "$SCRIPT_DIR/../tmp/$VER"
+
+# Note: 'bindeb-pkg' is a debian-specific flag which causes the make process to output .deb files.
+# Note (cont.): For a 'regular' custom linux distro, the 'make -j $(nproc)' command should suffice.
+if [ "$DEBUG" = "yes" ]; then
+  fakeroot make -j "$(nproc)" bindeb-pkg LOCALVERSION="-$DIST_NAME" KDEB_PKG_VERSION="$(make kernelversion)-1" V=1
+else
+  fakeroot make -j "$(nproc)" bindeb-pkg LOCALVERSION="-$DIST_NAME" KDEB_PKG_VERSION="$(make kernelversion)-1"
+fi

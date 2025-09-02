@@ -5,6 +5,7 @@
 !/config/
 !/notes/
 !/scripts/
+!.config
 !.gitignore
 !.gitmodules
 !CHANGELOG.md

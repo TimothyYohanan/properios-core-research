@@ -1,3 +1,16 @@
+#!/bin/sh
+
+DIST_NAME="properios"
+
+DEBUG="no" # yes/no
+
+# Note: On Debian systems, you can get the "pristine" kernel version 
+# number (different than the Debian kernel version number) for a running 
+# system from the first few lines of this file: /boot/config-$(uname -r)
+MAJ="v6.x" # https://mirrors.edge.kernel.org/pub/linux/kernel/
+VER_NUM="6.1.140"
+VER="linux-$VER_NUM" 
+
 # Reminder: for a pkcs-12 [.p12] keypair file, you can separate out the public certificate with the following command:
 #  $ openssl pkcs12 -in <path/to/file.p12> -clcerts -nokeys -out <path/to/file.crt>
 CA_X509_CERT_FILE_PATH="/home/user/my-ca-public-certificate.crt"

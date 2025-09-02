@@ -1,0 +1,47 @@
+#!/bin/sh
+
+set -u
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+TORVALDS_KEY="torvalds@kernel.org"
+GREGKH_KEY="gregkh@kernel.org"
+AUTOSIGNER_KEY="autosigner@kernel.org"
+
+TORVALDS_KEY_FINGERPRINT="ABAF11C65A2970B130ABE3C479BE3E4300411886"
+GREGKH_KEY_FINGERPRINT="647F28654894E3BD457199BE38DBBDC86092693E"
+
+DEV_KEYS="$TORVALDS_KEY $GREGKH_KEY"
+SHA_KEYS="$AUTOSIGNER_KEY"
+
+gpg --batch --quiet --auto-key-locate wkd --locate-keys ${DEV_KEYS} ${SHA_KEYS} 1>/dev/null 2>/dev/null
+if [ $? -ne 0 ]; then
+  echo "ERROR: Something went wrong while fetching keys. Rerunning failed command with output enabled:"
+  echo "gpg --auto-key-locate wkd --locate-keys ${DEV_KEYS} ${SHA_KEYS}"
+  gpg --auto-key-locate wkd --locate-keys ${DEV_KEYS} ${SHA_KEYS}
+  exit 1
+fi
+
+TORVALDS_IMPORTED_KEY_FINGERPRINT=$(gpg --with-colons --fingerprint "$TORVALDS_KEY" | awk -F: '/fpr:/ {print $10; exit }')
+GREGKH_IMPORTED_KEY_FINGERPRINT=$(gpg --with-colons --fingerprint "$GREGKH_KEY" | awk -F: '/fpr:/ {print $10; exit }')
+
+if [ -z "$TORVALDS_IMPORTED_KEY_FINGERPRINT" ]; then
+  echo "ERROR: Couldn't get the fingerprint for $TORVALDS_KEY."
+  exit 1
+elif [ ! "$TORVALDS_IMPORTED_KEY_FINGERPRINT" = "$TORVALDS_KEY_FINGERPRINT" ]; then
+  echo "ERROR: The key imported for $TORVALDS_KEY does not match the known good fingerprint."
+  exit 1
+fi
+
+if [ -z "$GREGKH_IMPORTED_KEY_FINGERPRINT" ]; then
+  echo "ERROR: Couldn't get the fingerprint for $GREGKH_KEY."
+  exit 1
+elif [ ! "$GREGKH_IMPORTED_KEY_FINGERPRINT" = "$GREGKH_KEY_FINGERPRINT" ]; then
+  echo "ERROR: The key imported for $GREGKH_KEY does not match the known good fingerprint."
+  exit 1
+fi
+
+gpg --batch --export ${DEV_KEYS} > ${SCRIPT_DIR}/../tmp/dev_keyring.gpg
+gpg --batch --export ${SHA_KEYS} > ${SCRIPT_DIR}/../tmp/sha_keyring.gpg
+
+

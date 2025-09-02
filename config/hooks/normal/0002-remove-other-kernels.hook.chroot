@@ -1,0 +1,17 @@
+#!/bin/sh
+
+set -e
+
+CUSTOM_KERNEL_VERSION="Note: this string will be automatically replaced when the '$ lb build' command is run. See /auto/build."
+
+for pkg in $(dpkg -l 'linux-image-*' | awk '/^ii/{print $2}'); do
+  if ! echo "$pkg" | grep -q "$CUSTOM_KERNEL_VERSION"; then
+    apt -y purge "$pkg"
+  fi
+done
+
+for ver in $(ls /boot/initrd.img-* | sed 's|.*/initrd.img-||'); do
+  if [ "$ver" != "$CUSTOM_KERNEL_VERSION" ]; then
+    update-initramfs -d -k "$ver"
+  fi
+done

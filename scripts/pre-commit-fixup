@@ -13,3 +13,11 @@ unset CA_X509_CERT_FILE_DIRECTORY
 sed -i \
   '/^SMART_CARD_X509_CERT_SUBJECT_LINE=/c\SMART_CARD_X509_CERT_SUBJECT_LINE="Note: this string will be automatically replaced when the '\''$ lb build'\'' command is run. See /auto/build."' \
   "$SCRIPT_DIR/../config/hooks/normal/0800-smart-card-authentication-setup.hook.chroot"
+
+sed -i \
+  '/^CUSTOM_KERNEL_VERSION=/c\CUSTOM_KERNEL_VERSION="Note: this string will be automatically replaced when the '\''$ lb build'\'' command is run. See /auto/build."' \
+  ${SCRIPT_DIR}/../config/hooks/normal/0001-create-initramfs-for-custom-kernel.hook.chroot
+
+sed -i \
+  '/^CUSTOM_KERNEL_VERSION=/c\CUSTOM_KERNEL_VERSION="Note: this string will be automatically replaced when the '\''$ lb build'\'' command is run. See /auto/build."' \
+  ${SCRIPT_DIR}/../config/hooks/normal/0002-remove-other-kernels.hook.chroot

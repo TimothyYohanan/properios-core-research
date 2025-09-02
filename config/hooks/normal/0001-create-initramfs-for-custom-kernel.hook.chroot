@@ -1,0 +1,7 @@
+#!/bin/sh
+
+set -e
+
+CUSTOM_KERNEL_VERSION="Note: this string will be automatically replaced when the '$ lb build' command is run. See /auto/build."
+
+update-initramfs -c -k "$CUSTOM_KERNEL_VERSION"
