@@ -10,7 +10,7 @@ chmod -R 100        /root/audit-this-directory
 
 ln -s -f /root/audit-this-directory /usr/local/sbin/audit-this-directory
 
-if [ ! -d /root/properios-core-specification ] && [ "$(ls -A /root/properios-core-specification)" ]; then
+if [ ! -d /root/properios-core-specification ] || [ -z "$(ls -A /root/properios-core-specification)" ]; then
   echo "ERROR: The properios-core-specification submodule is missing. You probably forgot to run 'git clone' with the '--recursive' flag when you cloned this repository."
   exit 1
 fi
